@@ -142,5 +142,15 @@ A modern Flask web application for managing products, locations, and stock movem
 
 <img width="1849" height="782" alt="Screenshot 2025-10-07 024536" src="https://github.com/user-attachments/assets/a3a454e0-00bb-4201-b827-2a105de50e7c" />
 
+### Movements Page
+
+<img width="1824" height="918" alt="Screenshot 2025-10-07 024657" src="https://github.com/user-attachments/assets/95a13a05-1460-42f4-b187-a1c36fe5ad0b" />
+
+### Balance Report Page
+
+<img width="1806" height="829" alt="Screenshot 2025-10-07 024826" src="https://github.com/user-attachments/assets/55ef0e9f-011e-45f4-8f9a-d7b60926b587" />
+
+
+
 
 
