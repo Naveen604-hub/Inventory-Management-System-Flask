@@ -129,3 +129,8 @@ A modern Flask web application for managing products, locations, and stock movem
 - `compute_balances()`: Calculate current stock levels
 - `get_available_qty()`: Get available quantity for a product at a location
 - `validate_movement_form()`: Validate movement data and stock availability
+
+### Main Page
+
+<img width="1859" height="928" alt="Screenshot 2025-10-07 024221" src="https://github.com/user-attachments/assets/0ed7ba35-e788-43ec-9e40-e3807c6b4299" />
+
