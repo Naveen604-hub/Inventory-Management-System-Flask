@@ -150,6 +150,13 @@ A modern Flask web application for managing products, locations, and stock movem
 
 <img width="1806" height="829" alt="Screenshot 2025-10-07 024826" src="https://github.com/user-attachments/assets/55ef0e9f-011e-45f4-8f9a-d7b60926b587" />
 
+### DataBase Pages
+
+<img width="1204" height="502" alt="Screenshot 2025-10-05 191219" src="https://github.com/user-attachments/assets/b6c7a7b1-fa81-48db-a1d1-84483b113a49" />
+<img width="1222" height="386" alt="Screenshot 2025-10-07 025134" src="https://github.com/user-attachments/assets/5a871491-1e27-47b7-aa8c-62dbbc08bb19" />
+<img width="1229" height="432" alt="Screenshot 2025-10-07 025047" src="https://github.com/user-attachments/assets/ad8b7be7-1eb6-4641-81ea-1c3398c12fbb" />
+
+
 
 
 
