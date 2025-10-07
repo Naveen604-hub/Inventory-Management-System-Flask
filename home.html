@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="py-5 hero-gradient rounded-3 mb-5 text-center">
+  <div class="container py-4">
+    <div class="display-5 fw-bold mb-2 brand-accent"><i class="bi bi-box-seam me-2"></i>Welcome to Inventory Management System</div>
+    <p class="lead text-muted">Manage your products, locations, and stock movements efficiently.</p>
+  </div>
+</section>
+
+<section class="mb-5">
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm h-100 tile fade-slide">
+        <div class="card-body text-center p-4">
+          <div class="mb-3">
+            <img src="{{ url_for('static', filename='img/product.svg') }}" width="64" height="64" alt="Products" />
+          </div>
+          <h4 class="mb-2">Products</h4>
+          <p class="text-muted">View and manage all products in your inventory.</p>
+          <a class="btn btn-outline-info" href="{{ url_for('products_list') }}"><i class="bi bi-eye me-1"></i>View Products</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm h-100 tile fade-slide">
+        <div class="card-body text-center p-4">
+          <div class="mb-3">
+            <img src="{{ url_for('static', filename='img/location.svg') }}" width="64" height="64" alt="Locations" />
+          </div>
+          <h4 class="mb-2">Locations</h4>
+          <p class="text-muted">Track warehouse or shop locations with ease.</p>
+          <a class="btn btn-outline-success" href="{{ url_for('locations_list') }}"><i class="bi bi-eye me-1"></i>View Locations</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm h-100 tile fade-slide">
+        <div class="card-body text-center p-4">
+          <div class="mb-3">
+            <img src="{{ url_for('static', filename='img/movement.svg') }}" width="64" height="64" alt="Movements" />
+          </div>
+          <h4 class="mb-2">Product Movements</h4>
+          <p class="text-muted">Monitor product transfers between locations.</p>
+          <a class="btn btn-outline-warning" href="{{ url_for('movements_list') }}"><i class="bi bi-eye me-1"></i>View Movements</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="bg-dark text-light small py-2 fixed-bottom">
+  <div class="container d-flex justify-content-center gap-3">
+    <span>© Inventory Management</span>
+    <a class="link-light text-decoration-none" href="#">Privacy</a>
+    <a class="link-light text-decoration-none" href="#">Terms</a>
+  </div>
+  </footer>
+{% endblock %}
+
+

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div class="d-flex align-items-center gap-2">
+    <img src="{{ url_for('static', filename='img/balance.svg') }}" width="36" height="36" alt="Balance" />
+    <h2 class="mb-0">Balance Report</h2>
+  </div>
+</div>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Warehouse</th>
+      <th>Qty</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in rows %}
+    <tr>
+      <td>{{ r.product_name }} ({{ r.product_id }})</td>
+      <td>{{ r.location_name }} ({{ r.location_id }})</td>
+      <td>{{ r.qty }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% if not rows %}
+<p>No balances yet. Create products, locations, and movements.</p>
+{% endif %}
+{% endblock %}
+
+

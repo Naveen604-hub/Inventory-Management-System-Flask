@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="text-center mb-4">
+  <img src="{{ url_for('static', filename='img/product.svg') }}" width="56" height="56" alt="Products" class="mb-2" />
+  <h2 class="mb-2">Products</h2>
+  <a class="btn btn-primary" href="{{ url_for('products_new') }}">Add Product</a>
+</div>
+<table class="table table-striped align-middle">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th class="text-end">Qty</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in products %}
+    <tr>
+      <td>{{ p.product_id }}</td>
+      <td>{{ p.name }}</td>
+      <td>{{ p.description }}</td>
+      <td class="text-end">
+        {{ product_totals.get(p.product_id, 0) }}
+        {% if product_breakdown.get(p.product_id) %}
+        <button class="btn btn-sm btn-outline-secondary ms-2" data-bs-toggle="collapse" data-bs-target="#bd-{{ p.product_id }}">Details</button>
+        {% endif %}
+      </td>
+      <td>
+        <a class="btn btn-sm btn-secondary" href="{{ url_for('products_edit', product_id=p.product_id) }}">Edit</a>
+        <form method="post" action="{{ url_for('products_delete', product_id=p.product_id) }}" style="display:inline" onsubmit="return confirm('Delete product?')">
+          <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% if product_breakdown.get(p.product_id) %}
+    <tr class="collapse" id="bd-{{ p.product_id }}">
+      <td colspan="5">
+        <div class="p-2">
+          <strong>By location:</strong>
+          <ul class="mb-0">
+            {% for r in product_breakdown.get(p.product_id) %}
+              <li>{{ r.location_name }} ({{ r.location_id }}): <strong>{{ r.qty }}</strong></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+
+

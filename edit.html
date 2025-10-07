@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Edit Product</h2>
+<form method="post">
+  <div class="mb-3">
+    <label class="form-label">Product ID</label>
+    <input class="form-control" value="{{ product.product_id }}" disabled />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Name</label>
+    <input class="form-control" name="name" value="{{ product.name }}" required />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Description</label>
+    <textarea class="form-control" name="description">{{ product.description }}</textarea>
+  </div>
+  <hr />
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Add Quantity</label>
+      <input type="number" min="1" class="form-control" name="add_qty" placeholder="Enter quantity to add" />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">To Location</label>
+      <select class="form-select" name="add_to_location">
+        <option value="">-- Select location --</option>
+        {% for l in locations %}
+        <option value="{{ l.location_id }}">{{ l.location_id }} - {{ l.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="form-text">Optionally add inbound stock for this product into a location.</div>
+  <button class="btn btn-primary" type="submit">Save</button>
+  <a class="btn btn-secondary" href="{{ url_for('products_list') }}">Cancel</a>
+</form>
+{% endblock %}
+
+
