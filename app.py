@@ -71,17 +71,17 @@ def get_available_qty(product_id: str, location_id: str) -> int:
 
 @app.route("/")
 def index():
-    # Stats
+    
     product_count = Product.query.count()
     location_count = Location.query.count()
     movement_count = ProductMovement.query.count()
 
-    # Recent movements
+    
     recent_movements = ProductMovement.query.order_by(ProductMovement.timestamp.desc()).limit(10).all()
     products = {p.product_id: p for p in Product.query.all()}
     locations = {l.location_id: l for l in Location.query.all()}
 
-    # Balances preview (top 10 non-zero by absolute qty desc)
+    
     balances = compute_balances()
     balance_rows = []
     for (product_id, location_id), qty in balances.items():
@@ -109,11 +109,10 @@ def index():
     )
 
 
-# Product CRUD
 @app.route("/products")
 def products_list():
     products = Product.query.order_by(Product.product_id.asc()).all()
-    # Aggregate balances for quick glance on product page
+
     balances = compute_balances()
     locations = {l.location_id: l for l in Location.query.all()}
     product_totals = {}
@@ -125,7 +124,7 @@ def products_list():
         lst = product_breakdown.setdefault(product_id, [])
         location_name = locations.get(location_id).name if location_id in locations else location_id
         lst.append({"location_id": location_id, "location_name": location_name, "qty": qty})
-    # Sort breakdown entries by location name
+
     for pid in product_breakdown:
         product_breakdown[pid].sort(key=lambda r: r["location_name"])
     return render_template("products/list.html", products=products, product_totals=product_totals, product_breakdown=product_breakdown)
@@ -165,7 +164,7 @@ def products_edit(product_id):
             product.name = name
             product.description = description
 
-            # If user specified a quantity to add, create an inbound movement into selected location
+        
             if add_qty_raw:
                 try:
                     add_qty = int(add_qty_raw)
@@ -177,7 +176,7 @@ def products_edit(product_id):
                 if not add_to_location or not Location.query.get(add_to_location):
                     flash("Please choose a valid location to receive the quantity.", "danger")
                     return render_template("products/edit.html", product=product, locations=all_locations)
-                # Auto-generate a unique movement id
+                
                 mid = f"AUTO-{int(datetime.utcnow().timestamp()*1000)}"
                 db.session.add(ProductMovement(
                     movement_id=mid,
@@ -196,7 +195,7 @@ def products_edit(product_id):
 @app.route("/products/<product_id>/delete", methods=["POST"])
 def products_delete(product_id):
     product = Product.query.get_or_404(product_id)
-    # Prevent delete if movements exist for this product
+    
     if ProductMovement.query.filter_by(product_id=product_id).first():
         flash("Cannot delete product with existing movements.", "danger")
         return redirect(url_for("products_list"))
@@ -206,7 +205,7 @@ def products_delete(product_id):
     return redirect(url_for("products_list"))
 
 
-# Location CRUD
+
 @app.route("/locations")
 def locations_list():
     locations = Location.query.order_by(Location.location_id.asc()).all()
@@ -251,7 +250,6 @@ def locations_edit(location_id):
 @app.route("/locations/<location_id>/delete", methods=["POST"])
 def locations_delete(location_id):
     location = Location.query.get_or_404(location_id)
-    # Prevent delete if movements reference this location
     if ProductMovement.query.filter((ProductMovement.from_location == location_id) | (ProductMovement.to_location == location_id)).first():
         flash("Cannot delete location referenced by movements.", "danger")
         return redirect(url_for("locations_list"))
@@ -261,7 +259,6 @@ def locations_delete(location_id):
     return redirect(url_for("locations_list"))
 
 
-# ProductMovement CRUD
 def validate_movement_form(form, existing_id: str | None = None):
     movement_id = form.get("movement_id", "").strip()
     product_id = form.get("product_id", "").strip()
@@ -269,7 +266,7 @@ def validate_movement_form(form, existing_id: str | None = None):
     to_location = form.get("to_location", "").strip() or None
     qty_raw = form.get("qty", "").strip()
 
-    # Basic checks
+
     if not movement_id:
         return None, "Movement ID is required."
     if existing_id is None and ProductMovement.query.get(movement_id):
@@ -291,10 +288,10 @@ def validate_movement_form(form, existing_id: str | None = None):
     if qty <= 0:
         return None, "Qty must be positive."
 
-    # Stock check for outbound or transfer
+    
     if from_location:
         available = get_available_qty(product_id, from_location)
-        # If editing, adjust availability by adding back original qty if from_location unchanged
+        
         if existing_id is not None:
             original = ProductMovement.query.get(existing_id)
             if original and original.from_location == from_location and original.product_id == product_id:
@@ -351,7 +348,7 @@ def movements_edit(movement_id):
             movement.from_location = data["from_location"]
             movement.to_location = data["to_location"]
             movement.qty = data["qty"]
-            # Keep the original timestamp unless user explicitly provided one (not in form now)
+            
             db.session.commit()
             flash("Successfully updated.", "success")
             return redirect(url_for("movements_list"))
@@ -361,8 +358,7 @@ def movements_edit(movement_id):
 @app.route("/movements/<movement_id>/delete", methods=["POST"])
 def movements_delete(movement_id):
     movement = ProductMovement.query.get_or_404(movement_id)
-    # Ensure deletion won't violate stock (i.e., after deletion, balances remain non-negative)
-    # This check is conservative: simulate removal and verify from_location would have enough stock
+
     if movement.from_location:
         available = get_available_qty(movement.product_id, movement.from_location)
         if available < movement.qty:
@@ -398,10 +394,10 @@ def report():
 
 @app.route("/seed")
 def seed():
-    # Create tables
+    
     db.create_all()
 
-    # Seed products
+    
     sample_products = [
         ("A", "Product A"),
         ("B", "Product B"),
@@ -412,7 +408,7 @@ def seed():
         if not Product.query.get(pid):
             db.session.add(Product(product_id=pid, name=name))
 
-    # Seed locations
+    
     sample_locations = [
         ("X", "Warehouse X"),
         ("Y", "Warehouse Y"),
@@ -425,7 +421,7 @@ def seed():
 
     db.session.commit()
 
-    # Seed movements (idempotent by checking IDs)
+
     def add_mv(mid, pid, fr, to, qty):
         if not ProductMovement.query.get(mid):
             db.session.add(ProductMovement(
@@ -436,7 +432,7 @@ def seed():
                 qty=qty,
             ))
 
-    # Initial stock in
+    
     add_mv("M1", "A", None, "X", 50)
     add_mv("M2", "B", None, "X", 30)
     add_mv("M3", "A", "X", "Y", 10)
@@ -444,7 +440,7 @@ def seed():
     add_mv("M5", "C", None, "Z", 40)
     add_mv("M6", "A", "Y", "Z", 5)
     add_mv("M7", "A", None, "X", 15)
-    add_mv("M8", "B", "X", None, 5)  # outbound sale
+    add_mv("M8", "B", "X", None, 5)  
     add_mv("M9", "C", "Z", "X", 12)
     add_mv("M10", "D", None, "W", 25)
     add_mv("M11", "D", "W", "X", 5)
@@ -467,5 +463,6 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
     app.run(debug=True)
+
 
 
